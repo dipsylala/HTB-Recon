@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+## in ~/.tmux.conf to enable mouse scrolling
+## set -g mouse on
+## set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+
 target=$1
 name=$2
 box=$3
@@ -21,10 +25,10 @@ then
 
   ## Create Tmux Session
   tmux new -s htb_recon -d
+  
   ## The VPN Window
   tmux rename-window -t htb_recon VPN
-  tmux split-window -v -t VPN
-  tmux split-window -h -t htb_recon:VPN.0
+  
   ## The Main Dashboard
   tmux new-window -d -t htb_recon -n DASH
   tmux split-window -h -t htb_recon:DASH.0
@@ -32,8 +36,12 @@ then
   tmux split-window -v -t htb_recon:DASH.0
 
   ## Running Commands
-  tmux send-keys -t htb_recon:VPN.0 'sudo openvpn ~/HackingProjects/hackthebox/lab.ovpn' 
+  tmux send-keys -t htb_recon:VPN 'sudo openvpn ~/HackingProjects/hackthebox/lab.ovpn'
 
+  ## An nmap session for initial ports
+  ## masscan for all ports
+  ## gobuster for directory enumeration, assuming a non-SSL web server
+  ## ffuf for similar
   tmux send-keys -t htb_recon:DASH.0 'nmap -sC -sV -oN recon/initial_nmap.txt -v -Pn $target' 
   tmux send-keys -t htb_recon:DASH.1 'sudo masscan -p1-65535 -e tun0 -oL recon/allports.txt --rate=1000 -vv -Pn $target'
   tmux send-keys -t htb_recon:DASH.2 'gobuster dir -u http://$target -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -o recon/dirscan.txt'
