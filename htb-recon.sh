@@ -46,7 +46,7 @@ then
   tmux send-keys -t htb_recon:VPN 'sudo openvpn ~/HackingProjects/hackthebox/lab.ovpn'
 
   ## Scan for ports - nmap for quick scan, masscan for deep scan
-  tmux send-keys -t htb_recon:PORTS.0 'nmap -sC -sV -oN recon/initial_nmap.txt -v -Pn $target' 
+  tmux send-keys -t htb_recon:PORTS.0 'nmap -T4 -sC -sV -oN recon/initial_nmap.txt -v -Pn $target' 
   tmux send-keys -t htb_recon:PORTS.1 'sudo masscan -p1-65535 -e tun0 -oL recon/allports.txt --rate=1000 -vv -Pn $target'
 
   ## Scan for directories
