@@ -55,7 +55,7 @@ then
 
   ## DNS Window: Running Commands
   tmux send-keys -t htb_recon:DNS.0 'echo "${target}\t${name}.htb"  | sudo tee -a /etc/hosts' 
-  tmux send-keys -t htb_recon:DNS.1 'gobuster dns -d ${name}.htb -w /usr/share/wordlists/dirb/common.txt -o recon/dnsscan.txt'
+  tmux send-keys -t htb_recon:DNS.1 'gobuster dns -d ${name}.htb -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -o recon/dnsscan.txt'
 
   ## Create notes in MarkDown, ready for VS Code
   echo "# Info" >> Notes.md
