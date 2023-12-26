@@ -8,6 +8,7 @@ target=$1
 name=$2
 box=$3
 
+
 if (($#==3));
 then
 
@@ -31,13 +32,18 @@ then
   
   ## The Main Dashboard
   tmux new-window -d -t htb_recon -n DASH
-  tmux split-window -h -t htb_recon:DASH.0
-  tmux split-window -v -t htb_recon:DASH.1
+  tmux split-window -h -t htb_recon:DASH
   tmux split-window -v -t htb_recon:DASH.0
+  tmux split-window -v -t htb_recon:DASH.2
 
-  ## Running Commands
+  ## The DNS Dashboard
+  tmux new-window -d -t htb_recon -n DNS
+  tmux split-window -h -t htb_recon:DNS.0
+
+  ## VPN Window: Running Commands
   tmux send-keys -t htb_recon:VPN 'sudo openvpn ~/HackingProjects/hackthebox/lab.ovpn'
 
+  ## Port Window: Running Commands
   ## An nmap session for initial ports
   ## masscan for all ports
   ## gobuster for directory enumeration, assuming a non-SSL web server
@@ -46,6 +52,10 @@ then
   tmux send-keys -t htb_recon:DASH.1 'sudo masscan -p1-65535 -e tun0 -oL recon/allports.txt --rate=1000 -vv -Pn $target'
   tmux send-keys -t htb_recon:DASH.2 'gobuster dir -u http://$target -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -o recon/dirscan.txt'
   tmux send-keys -t htb_recon:DASH.3 'ffuf -w /usr/share/wordlists/dirb/big.txt -u http://$target/FUZZ | tee recon/ffuf.txt' 
+
+  ## DNS Window: Running Commands
+  tmux send-keys -t htb_recon:DNS.0 'echo "${target}\t${name}.htb"  | sudo tee -a /etc/hosts' 
+  tmux send-keys -t htb_recon:DNS.1 'gobuster dns -d $name.com -w /usr/share/wordlists/dirb/common.txt -o recon/dnsscan.txt'
 
   ## Create notes in MarkDown, ready for VS Code
   echo "# Info" >> Notes.md
