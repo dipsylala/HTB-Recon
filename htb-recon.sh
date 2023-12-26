@@ -21,9 +21,11 @@ then
 
   ## Create Tmux Session
   tmux new -s htb_recon -d
+  ## The VPN Window
   tmux rename-window -t htb_recon VPN
   tmux split-window -v -t VPN
   tmux split-window -h -t htb_recon:VPN.0
+  ## The Main Dashboard
   tmux new-window -d -t htb_recon -n DASH
   tmux split-window -h -t htb_recon:DASH.0
   tmux split-window -v -t htb_recon:DASH.1
