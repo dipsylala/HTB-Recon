@@ -47,6 +47,6 @@ then
   echo "'tmux a -t htb_recon' to connect"
 else
   echo "Usage: ./htb-recon.sh <IP> <Name_of_Machine> <OS> "
-  echo "Example: ./workspace.sh 10.10.10.180 ServMon Windows"
+  echo "Example: ./htb-recon.sh 10.10.10.180 ServMon Windows"
 
 fi
