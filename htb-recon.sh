@@ -41,6 +41,7 @@ then
   ## The DNS
   tmux new-window -d -t htb_recon -n DNS
   tmux split-window -h -t htb_recon:DNS
+  tmux split-window -v -t htb_recon:DNS.1
 
   ## VPN Window: Running Commands
   tmux send-keys -t htb_recon:VPN 'sudo openvpn ~/HackingProjects/hackthebox/lab.ovpn'
@@ -55,7 +56,8 @@ then
 
   ## DNS Window: Running Commands
   tmux send-keys -t htb_recon:DNS.0 'echo "${target}\t${name}.htb"  | sudo tee -a /etc/hosts' 
-  tmux send-keys -t htb_recon:DNS.1 'gobuster dns -d ${name}.htb -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -o recon/dnsscan.txt'
+  tmux send-keys -t htb_recon:DNS.1 'gobuster dns -d ${name}.htb -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt -o recon/dnsscan.txt'
+  tmux send-keys -t htb_recon:DNS.2 'wfuzz -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt -u http://${name}.htb/ -H "Host: FUZZ.${name}.htb" --hc 301,302'
 
   ## Create notes in MarkDown, ready for VS Code
   echo "# Info" >> Notes.md
