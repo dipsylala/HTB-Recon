@@ -66,7 +66,8 @@ then
   echo "* Level: " >> Notes.md
   code  Notes.md
 
-  echo "'tmux a -t htb_recon' to connect"
+  echo "To connect, use:"
+  echo "tmux a -t htb_recon"
 else
   echo "Usage: ./htb-recon.sh <IP> <Name_of_Machine> <OS> "
   echo "Example: ./htb-recon.sh 10.10.10.180 ServMon Windows"
