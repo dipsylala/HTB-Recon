@@ -48,6 +48,10 @@ tmux split-window -h -t htb_recon:DNS
 tmux split-window -v -t htb_recon:DNS.0
 tmux split-window -v -t htb_recon:DNS.2
 
+## Scratchpad
+tmux new-window -d -t htb_recon -n SCRATCH
+tmux split-window -h -t htb_recon:SCRATCH
+
 ## VPN Window: Running Commands
 tmux send-keys -t htb_recon:VPN 'sudo openvpn ~/HackingProjects/hackthebox/lab.ovpn'
 
@@ -76,5 +80,7 @@ echo "* Box: $box" >> Notes.md
 echo "* Level: " >> Notes.md
 code  Notes.md
 
-echo "To connect:"
+echo "Connecting via:"
 echo "tmux a -t htb_recon"
+
+tmux a -t htb_recon
