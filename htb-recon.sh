@@ -1,8 +1,23 @@
 #!/bin/zsh
 
-## in ~/.tmux.conf to enable mouse scrolling
-## set -g mouse on
-## set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+## in ~/.tmux.conf to enable mouse scrolling and usual clipboard behaviour
+
+## Enable mouse support
+#set -g mouse on
+#
+## Bind the MouseDragEnd1Pane event to copy the selected text to the clipboard
+#bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "xclip -selection clipboard"
+#
+## Use vim keybindings in copy mode
+#setw -g mode-keys vi
+#
+## Setup 'v' to begin selection as in Vim
+#bind-key -T copy-mode-vi v send -X begin-selection
+#bind-key -T copy-mode-vi y send -X copy-pipe-and-cancel "xclip -in -selection clipboard"
+#
+## Update default binding of `Enter` to also use xclip
+#unbind -T copy-mode-vi Enter
+#bind-key -T copy-mode-vi Enter send -X copy-pipe-and-cancel "xclip -in -selection clipboard"
 
 target=$1
 name=$2
@@ -48,7 +63,7 @@ tmux split-window -h -t htb_recon:DNS
 tmux split-window -v -t htb_recon:DNS.0
 tmux split-window -v -t htb_recon:DNS.2
 
-## Scratchpad
+## Scratchpads
 tmux new-window -d -t htb_recon -n SCRATCH
 tmux split-window -h -t htb_recon:SCRATCH
 
@@ -62,15 +77,14 @@ tmux send-keys -t htb_recon:PORTS.2 'nmap -sU -F --min-rate 1000 -n -Pn --max-re
 
 ## Scan for directories
 tmux send-keys -t htb_recon:DIRS.0 'gobuster dir -u http://${name}.htb -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -o recon/dir_gobuster.txt'
-tmux send-keys -t htb_recon:DIRS.1 'ffuf -w /usr/share/wordlists/dirb/big.txt -u http://${name}.htb/FUZZ | tee recon/dir_ffuf.txt' 
 
-tmux send-keys -t htb_recon:DIRS.1 'ffuf -w directory…. -u http://${name}.htb/FUZZ -recursion -e .txt,.php,.html,.bak,.jar,.war,.backup,._backup | tee recon/dir_ffuf.txt'
+tmux send-keys -t htb_recon:DIRS.1 'ffuf -w /usr/sahre/wordlists/dirb/big.txt -u http://${name}.htb/FUZZ -recursion -e .txt,.php,.html,.bak,.jar,.war,.backup,._backup | tee recon/dir_ffuf.txt'
 
 ## DNS Window: Running Commands
 tmux send-keys -t htb_recon:DNS.0 'echo "${target}\t${name}.htb"  | sudo tee -a /etc/hosts' 
 tmux send-keys -t htb_recon:DNS.1 'dig any ${name}.htb @${target}' 
 tmux send-keys -t htb_recon:DNS.2 'gobuster dns -d ${name}.htb -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt -o recon/dns_gobuster.txt'
-tmux send-keys -t htb_recon:DNS.3 'wfuzz -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt -u http://${name}.htb/ -H "Host: FUZZ.${name}.htb" --hc 301,302 -f recon/dns_wfuzz.txt'
+tmux send-keys -t htb_recon:DNS.3 'wfuzz -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt -u http://${name}.htb/ -H "Host: FUZZ.${name}.htb" -f recon/dns_wfuzz.txt'
 
 ## Create notes in MarkDown, ready for VS Code
 echo "# Info" >> Notes.md
