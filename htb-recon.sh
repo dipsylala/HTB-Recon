@@ -72,6 +72,8 @@ tmux send-keys -t htb_recon:VPN 'sudo openvpn ~/HackingProjects/hackthebox/lab.o
 
 ## Scan for ports - nmap for quick scan, masscan for deep scan
 tmux send-keys -t htb_recon:PORTS.0 'nmap -T4 -sC -sV -oN recon/ports_initial_nmap.txt -v -Pn $target' 
+## If you don't want to use masscan, try 
+## tmux send-keys -t htb_recon:PORTS.1 'sudo nmap -p- --min-rate=10000 -oA recon/ports_full_nmap.txt -v $target
 tmux send-keys -t htb_recon:PORTS.1 'sudo masscan -p1-65535 -e tun0 -oL recon/ports_full_masscan.txt --rate=1000 -vv -Pn $target'
 tmux send-keys -t htb_recon:PORTS.2 'nmap -sU -F --min-rate 1000 -n -Pn --max-retries 2 -oN udpFast.txt $target'
 
