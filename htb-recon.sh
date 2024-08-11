@@ -78,6 +78,8 @@ tmux send-keys -t htb_recon:PORTS.1 'sudo masscan -p1-65535 -e tun0 -oL recon/po
 tmux send-keys -t htb_recon:PORTS.2 'nmap -sU -F --min-rate 1000 -n -Pn --max-retries 2 -oN udpFast.txt $target'
 
 ## Scan for directories
+## Don't want to use gobuster? Try feroxbuster
+## tmux send-keys -t htb_recon:DNS.2 'feroxbuster -u http://${name}.htb  -o recon/dir_feroxbuster.txt'
 tmux send-keys -t htb_recon:DIRS.0 'gobuster dir -u http://${name}.htb -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -o recon/dir_gobuster.txt'
 
 tmux send-keys -t htb_recon:DIRS.1 'ffuf -w /usr/sahre/wordlists/dirb/big.txt -u http://${name}.htb/FUZZ -recursion -e .txt,.php,.html,.bak,.jar,.war,.backup,._backup | tee recon/dir_ffuf.txt'
